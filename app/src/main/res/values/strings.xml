@@ -19,4 +19,10 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>
     <string name="sample_message">Hello!</string>
 
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+
+
+    <string name="google_maps_API_key">AIzaSyAb7cS6j6sABAzNX-LvwTNBrjsR1YNYoyc</string>
+
 </resources>

@@ -21,5 +21,9 @@
     <color name="yellowSecondary">#ffa726</color>
     <color name="yellowLight">#ffd95b</color>
     <color name="yellowDark">#c77800</color>
+    <color name="transparentWhite">#80FFFFFF</color>
+
+    <color name="tenPercentLightYellow">#10ffa726</color>
+    <color name="thirtyPercentLightYellow">#30ffa726</color>
 
 </resources>

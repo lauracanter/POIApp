@@ -6,15 +6,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/register_page_mountains"
-    android:gravity="top">
+    android:gravity="top"
+    android:theme="@android:style/Theme.Holo.NoActionBar">
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="130dp"
         android:layout_height="130dp"
-        android:layout_alignParentTop="true"
+        android:layout_above="@+id/register_username"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"
+        android:layout_marginBottom="64dp"
         android:contentDescription="@string/logo_picture"
         app:srcCompat="@drawable/logo_world"/>
 
@@ -32,8 +33,9 @@
         android:inputType="textNoSuggestions"
         android:maxLines="1"
         android:textColor="@color/yellowSecondary"
-        android:textColorHint="@color/yellowSecondary"
-        android:textIsSelectable="false"/>
+        android:textColorHint="#80ffa726"
+        android:textIsSelectable="false"
+        android:textStyle="bold"/>
 
     <AutoCompleteTextView
         android:id="@+id/register_email"
@@ -48,9 +50,10 @@
         android:inputType="textEmailAddress"
         android:maxLines="1"
         android:textColor="@color/yellowSecondary"
-        android:textColorHint="@color/yellowSecondary"
+        android:textColorHint="#80ffa726"
         android:textIsSelectable="false"
-        android:layout_marginRight="20dp"/>
+        android:layout_marginRight="20dp"
+        android:textStyle="bold"/>
 
     <EditText
         android:id="@+id/register_password"
@@ -65,8 +68,9 @@
         android:inputType="textPassword"
         android:maxLines="1"
         android:textColor="@color/yellowSecondary"
-        android:textColorHint="@color/yellowSecondary"
-        android:layout_marginRight="20dp"/>
+        android:textColorHint="#80ffa726"
+        android:layout_marginRight="20dp"
+        android:textStyle="bold"/>
 
     <EditText
         android:id="@+id/register_confirm_password"
@@ -84,7 +88,8 @@
         android:inputType="textPassword"
         android:maxLines="1"
         android:textColor="@color/yellowSecondary"
-        android:textColorHint="@color/yellowSecondary"/>
+        android:textColorHint="#80ffa726"
+        android:textStyle="bold"/>
 
     <Button
         android:id="@+id/button_register_signup"
@@ -96,10 +101,10 @@
         android:layout_marginEnd="20dp"
         android:layout_marginStart="20dp"
         android:text="@string/action_sign_up"
-        android:textColor="@color/greyDark"
+        android:textColor="@color/yellowDark"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:background="@color/yellowDark"/>
-
+        android:background="#60000000"
+        android:onClick="signUp"/>
 
 </RelativeLayout>

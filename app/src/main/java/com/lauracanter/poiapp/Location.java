@@ -5,4 +5,8 @@ package com.lauracanter.poiapp;
  */
 
 public class Location {
+    private int locationId;
+    private String name, geometry;
+    private float longitude, latitude;
+
 }
