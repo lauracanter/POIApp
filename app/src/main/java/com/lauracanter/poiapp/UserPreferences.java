@@ -15,8 +15,10 @@ public class UserPreferences {
     private ArrayList<String> mEntertainmentAndSitesGoogleKeywords;
     private ArrayList<String> mNonGoogleKeywords;
 
-    public UserPreferences(String currentUser, ArrayList<String> foodAndDrinkGoogleKeywords, ArrayList<String> shoppingGoogleKeywords, ArrayList<String> entertainmentAndSitesGoogleKeywords, ArrayList<String> nonGoogleKeywords) {
-        mCurrentUser = currentUser;
+    public UserPreferences() {
+    }
+
+    public UserPreferences(ArrayList<String> foodAndDrinkGoogleKeywords, ArrayList<String> shoppingGoogleKeywords, ArrayList<String> entertainmentAndSitesGoogleKeywords, ArrayList<String> nonGoogleKeywords) {
         mFoodAndDrinkGoogleKeywords = foodAndDrinkGoogleKeywords;
         mShoppingGoogleKeywords = shoppingGoogleKeywords;
         mEntertainmentAndSitesGoogleKeywords = entertainmentAndSitesGoogleKeywords;

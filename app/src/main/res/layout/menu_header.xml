@@ -3,7 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="160dp"
-    android:background="@drawable/dwejra_background">
+    android:background="@drawable/dwejra_background"
+    android:theme="@style/AppTheme"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/username_textview"
@@ -15,5 +17,5 @@
         android:textAlignment="center"
         android:textColor="@color/transparentWhite"
         android:textStyle="bold"
-        android:textSize="50dp"/>
+        android:textSize="50sp"/>
 </LinearLayout>

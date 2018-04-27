@@ -1,6 +1,8 @@
 package com.lauracanter.poiapp;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
@@ -13,6 +15,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -52,7 +56,7 @@ public class TagwordsActivity extends AppCompatActivity {
 
         getSupportActionBar().hide();
 
-        userPreferencesDatabaseInstance = FirebaseDatabase.getInstance().getReference("");
+        userPreferencesDatabaseInstance = FirebaseDatabase.getInstance().getReference().child("User Preferences");
 
         mSlideViewPager = findViewById(R.id.slideViewPager);
         mDotLayout = findViewById(R.id.dotsLayout);
@@ -75,6 +79,9 @@ public class TagwordsActivity extends AppCompatActivity {
                 if (mCurrentPage == 3)
                 {
                     storeKeywordsInFirebase();
+                    Intent intent = new Intent(TagwordsActivity.this, HomePageActivity.class);
+                    finish();
+                    startActivity(intent);
                 }
 
                 else
@@ -299,12 +306,26 @@ public class TagwordsActivity extends AppCompatActivity {
 
     }
 
+
     public void storeKeywordsInFirebase()
     {
         currentUserId = currentUser.getUid();
-        UserPreferences userPreferencesInfo = new UserPreferences(currentUserId, mFoodAndDrinkGoogleKeywords, mShoppingGoogleKeywords, mEntertainmentAndSitesGoogleKeywords, mNonGoogleKeywords);
+        UserPreferences userPreferencesInfo = new UserPreferences(mFoodAndDrinkGoogleKeywords, mShoppingGoogleKeywords, mEntertainmentAndSitesGoogleKeywords, mNonGoogleKeywords);
 
-        userPreferencesDatabaseInstance.child("user_preferences").setValue(userPreferencesInfo);
+        //userPreferencesDatabaseInstance.child("user_preferences").setValue(userPreferencesInfo);
+        userPreferencesDatabaseInstance.child(currentUserId).setValue(userPreferencesInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful())
+                {
+                    Toast.makeText(TagwordsActivity.this, "Successful", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    Toast.makeText(TagwordsActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         Toast.makeText(this, "User Information Saved", Toast.LENGTH_SHORT);
 
     }

@@ -6,8 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.lauracanter.poiapp.LoginActivity"
-    android:background="@drawable/login_background_myphoto"
-    android:theme="@style/NoActionBar">
+    android:background="@drawable/login_background_myphoto">
+   <!-- android:theme="@style/NoActionBar" -->
 
     <ImageView
         android:id="@+id/imageView2"
