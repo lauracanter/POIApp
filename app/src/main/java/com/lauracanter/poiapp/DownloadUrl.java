@@ -14,6 +14,8 @@ public class DownloadUrl {
 
     public String readUrl(String myUrl) throws IOException{
 
+        Log.d("POIApp", "readUrl accessed");
+
         String data = "";
         InputStream inputStream = null;
         HttpURLConnection urlConnection = null;
@@ -46,7 +48,7 @@ public class DownloadUrl {
             urlConnection.disconnect();
         }
 
-        Log.d("DownloadURL","Returning data= "+data);
+        //Log.d("DownloadURL","Returning data= "+data);
 
         return data;
     }

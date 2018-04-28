@@ -44,28 +44,28 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
         showNearByPlaces(nearbyPlaceList);
     }
 
-    private void showNearByPlaces(List<HashMap<String, String>> nearbyPlaceList)
-    {
-        for(int i = 0; i<nearbyPlaceList.size(); i++)
-        {
+    private void showNearByPlaces(List<HashMap<String, String>> nearbyPlaceList) {
+
+        Log.d("POIApp", "showNearbyPlaces, size of hashmap: " + nearbyPlaceList.size());
+
+
+        for (int i = 0; i < nearbyPlaceList.size(); i++) {
+            Log.d("onPostExecute", "Entered into showing locations");
             MarkerOptions markerOptions = new MarkerOptions();
             HashMap<String, String> googlePlace = nearbyPlaceList.get(i);
-
-            String placeName = googlePlace.get("name");
-            Log.d("POIApp", "placeName"+placeName);
-            String vicinity = googlePlace.get("vicinity");
-            Log.d("POIApp", "vicinity"+vicinity);
             double lat = Double.parseDouble(googlePlace.get("lat"));
             double lng = Double.parseDouble(googlePlace.get("lng"));
-
+            String placeName = googlePlace.get("place_name");
+            String vicinity = googlePlace.get("vicinity");
             LatLng latLng = new LatLng(lat, lng);
             markerOptions.position(latLng);
-            markerOptions.title(placeName+" : "+vicinity);
-            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
-
+            markerOptions.title(placeName + " : " + vicinity);
             mMap.addMarker(markerOptions);
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-            mMap.animateCamera(CameraUpdateFactory.zoomTo(16));
+            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+            //move map camera
+            //mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+            //mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
         }
     }
+
 }

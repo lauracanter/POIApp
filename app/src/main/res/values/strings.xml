@@ -25,5 +25,6 @@
 
     <string name="google_maps_API_key">AIzaSyAb7cS6j6sABAzNX-LvwTNBrjsR1YNYoyc</string>
     <string name="google_places_API_key">AIzaSyCr9IWRpDQiErgDY-HDnShGUXaAGm4GLRQ</string>
+    <string name="google_places_API_key_2">AIzaSyDBOy2mCnhP8fl3_nvrAemV_80_hXemJJc</string>
 
 </resources>

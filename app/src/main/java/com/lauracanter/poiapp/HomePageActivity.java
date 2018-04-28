@@ -68,19 +68,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.lauracanter.poiapp.Model.Geometry;
-import com.lauracanter.poiapp.Model.MyPlaces;
-import com.lauracanter.poiapp.Model.Results;
-import com.lauracanter.poiapp.Remote.IGoogleAPIService;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by Laura on 08/03/2018.
@@ -90,21 +83,18 @@ public class HomePageActivity extends AppCompatActivity implements OnMapReadyCal
 
     private static final String TAG = "MainActivity", COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION, FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1, ERROR_DIALOG_REQUEST = 9001;
-    private static final float DEFAULT_ZOOM = 16f, PROXIMITY_RADIUS = 50;
+    private static final float DEFAULT_ZOOM = 17f, PROXIMITY_RADIUS = 60;
 
-    private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mToggle;
     private GoogleMap mMap;
-    //private MarkerOptions newMarker;
 
-    private GeoDataClient mGeoDataClient;
+    //private GeoDataClient mGeoDataClient;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
-    private PlaceDetectionClient mPlaceDetectionClient;
-    private FusedLocationProviderClient mFusedLocationProviderClient;
+    //private PlaceDetectionClient mPlaceDetectionClient;
+    //private FusedLocationProviderClient mFusedLocationProviderClient;
     private LocationManager mLocationManager;
     private LocationListener mLocationListener;
-    //private LatLng latlngPos, mDefaultLocation;
     private Location mLastKnownLocation;
 
     private DatabaseReference mDatabaseReference;
@@ -115,26 +105,22 @@ public class HomePageActivity extends AppCompatActivity implements OnMapReadyCal
     private ArrayList<String> mEntertainmentAndSitesGoogleKeywords, mFoodAndDrinkGoogleKeywords, mNonGoogleKeywords, mShoppingGoogleKeywords;
     private String currentUserId;
     private boolean isPermissionGranted, mLocationPermissionGranted = false;
-   // private double distanceTravelled = 0;
-    //private float[] distanceBetweenResults = new float[3];
-
-    IGoogleAPIService mService;
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         Toast.makeText(this, "Map is Ready", Toast.LENGTH_SHORT).show();
         Log.d(TAG, "onMapReady: map is ready");
-        //getDeviceLocation();
+
         mMap = googleMap;
         mMap.setMaxZoomPreference(DEFAULT_ZOOM);
         mMap.setMinZoomPreference(DEFAULT_ZOOM);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
         mMap.getUiSettings().setAllGesturesEnabled(false);
+
     }
 
     @SuppressLint("RestrictedApi")
@@ -144,19 +130,23 @@ public class HomePageActivity extends AppCompatActivity implements OnMapReadyCal
         setContentView(R.layout.activity_homepage);
 
         //Set up menu
-        mDrawerLayout = findViewById(R.id.drawer);
-        mToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.open, R.string.close);
-        mDrawerLayout.addDrawerListener(mToggle);
+        DrawerLayout drawerLayout = findViewById(R.id.drawer);
+        mToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
+        drawerLayout.addDrawerListener(mToggle);
         mToggle.syncState();
         currentUserId = currentUser.getUid();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mDatabaseReference = FirebaseDatabase.getInstance().getReference().child("User Preferences").child(currentUserId);
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        //mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
-        mPlaceDetectionClient = Places.getPlaceDetectionClient(this, null);
-        mGeoDataClient = Places.getGeoDataClient(this, null);
+        // mPlaceDetectionClient = Places.getPlaceDetectionClient(this, null);
+        // mGeoDataClient = Places.getGeoDataClient(this, null);
 
-        mService = Common.getGoogleAPIService();
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            return;
+        }
 
         if (getSupportActionBar() != null) {
             Log.d("POIApp", "getSupportActionbar not null");
@@ -185,11 +175,12 @@ public class HomePageActivity extends AppCompatActivity implements OnMapReadyCal
         mLocationRequest = new LocationRequest();
         mLocationRequest.setSmallestDisplacement(100);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-
         mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
+
     }
 
     @Override
@@ -197,6 +188,7 @@ public class HomePageActivity extends AppCompatActivity implements OnMapReadyCal
         super.onStart();
         mGoogleApiClient.connect();
     }
+
 
     @Override
     public void onResume() {
@@ -240,8 +232,7 @@ public class HomePageActivity extends AppCompatActivity implements OnMapReadyCal
         });
     }
 
-
-    private void updateLocationUI() {
+    /*private void updateLocationUI() {
         if (mMap == null) {
             return;
         }
@@ -260,7 +251,7 @@ public class HomePageActivity extends AppCompatActivity implements OnMapReadyCal
         } catch (SecurityException e) {
             Log.e("Exception: %s", e.getMessage());
         }
-    }
+    }*/
 
     public boolean isServicesOk() {
         Log.d("POIApp", "isServicesOk: checking google services version");
@@ -368,8 +359,6 @@ public class HomePageActivity extends AppCompatActivity implements OnMapReadyCal
 
         Log.i("POIApp", location.toString());
 
-        GetNearbyPlacesData getNearbyPlacesData = new GetNearbyPlacesData();
-
         if (mLocationListener != null) {
             mLocationListener.onLocationChanged(location);
         }
@@ -382,22 +371,13 @@ public class HomePageActivity extends AppCompatActivity implements OnMapReadyCal
         }
 
         if (location.distanceTo(mLastKnownLocation) > 20) {
+            mMap.clear();
 
             Log.d("POIApp", "Travelled over 20 meters");
 
-            String url = getUrl(location.getLatitude(), location.getLongitude(), "restaurant");
-            Object dataTransfer[] = new Object[2];
-            dataTransfer[0] = mMap;
-            dataTransfer[1] = url;
+            generatePlacesFromArrays(location);
 
-            getNearbyPlacesData.execute(dataTransfer);
-
-
-            Toast.makeText(HomePageActivity.this, "Showing nearby Cafes", Toast.LENGTH_SHORT).show();
-
-
-            //nearbyPlace("restaurant", location);
-            //Log.d("POIApp", "Distance travelled: " + location.distanceTo(mLastKnownLocation));
+            Toast.makeText(HomePageActivity.this, "Showing nearby places", Toast.LENGTH_SHORT).show();
 
             mLastKnownLocation = location;
         }
@@ -426,59 +406,77 @@ public class HomePageActivity extends AppCompatActivity implements OnMapReadyCal
         googlePlaceUrl.append("&radius="+PROXIMITY_RADIUS);
         googlePlaceUrl.append("&type="+placeType);
         googlePlaceUrl.append("&sensor=true");
-        googlePlaceUrl.append("&key="+R.string.google_places_API_key);
+        googlePlaceUrl.append("&key=AIzaSyCr9IWRpDQiErgDY-HDnShGUXaAGm4GLRQ");
 
         Log.d("MapsActivity", "url = "+googlePlaceUrl.toString());
 
         return googlePlaceUrl.toString();
     }
 
-    private void nearbyPlace(String placeType, Location location)
+    private String getUrlKeyword(double latitude, double longitude, String placeType) {
+
+        StringBuilder googlePlaceUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
+        googlePlaceUrl.append("location="+latitude+","+longitude);
+        googlePlaceUrl.append("&radius="+PROXIMITY_RADIUS);
+        googlePlaceUrl.append("&keyword="+placeType);
+        googlePlaceUrl.append("&sensor=true");
+        googlePlaceUrl.append("&key=AIzaSyCr9IWRpDQiErgDY-HDnShGUXaAGm4GLRQ");
+
+        Log.d("MapsActivity", "url = "+googlePlaceUrl.toString());
+
+        return googlePlaceUrl.toString();
+    }
+
+    public void generatePlacesAccordingToTagword(Location location, String keyword)
     {
-        Log.d("POIApp", "nearbyPlace: "+placeType);
-        String url = getUrl(location.getLatitude(), location.getLongitude(), placeType);
+        GetNearbyPlacesData getNearbyPlacesData = new GetNearbyPlacesData();
 
-        mService.getNearbyPlaces(url)
-                .enqueue(new Callback<MyPlaces>() {
-                    @Override
-                    public void onResponse(Call<MyPlaces> call, Response<MyPlaces> response) {
-                        Log.d("POIApp","nearbyPlace: onResponse");
+        String url = getUrl(location.getLatitude(), location.getLongitude(), keyword);
+        Object dataTransfer[] = new Object[2];
+        dataTransfer[0] = mMap;
+        dataTransfer[1] = url;
 
-                        if (response.isSuccessful()) {
-                            Log.d("POIApp","nearbyPlace: isSuccessful");
-                            for(int i=0;i<response.body().getResults().length;i++)
-                            {
+        getNearbyPlacesData.execute(dataTransfer);
+    }
 
-                                Results googlePlace = response.body().getResults()[i];
+    public void generatePlacesAccordingToKeyword(Location location, String keyword)
+    {
+        GetNearbyPlacesData getNearbyPlacesData = new GetNearbyPlacesData();
 
-                                if(googlePlace.getGeometry()==null)
-                                {
-                                    Log.d("POIApp", "Geometry object is null");
-                                }
+        String url = getUrlKeyword(location.getLatitude(), location.getLongitude(), keyword);
+        Object dataTransfer[] = new Object[2];
+        dataTransfer[0] = mMap;
+        dataTransfer[1] = url;
 
-                                double lat = googlePlace.getGeometry().getLocation().getLatitude();
-                                double lng = googlePlace.getGeometry().getLocation().getLongitude();
+        getNearbyPlacesData.execute(dataTransfer);
+    }
 
-                                String placeName = googlePlace.getName();
-                                String vicinity = googlePlace.getVicinity();
-                                LatLng latLng = new LatLng(lat, lng);
+    public void generatePlacesFromArrays(Location location)
+    {
+        //Retrieves accroding to type
+        for(int i = 0; i<mEntertainmentAndSitesGoogleKeywords.size();i++)
+        {
+            generatePlacesAccordingToTagword(location, mEntertainmentAndSitesGoogleKeywords.get(i));
+        }
 
-                                MarkerOptions markerOptions = new MarkerOptions()
-                                        .position(latLng)
-                                        .title(placeName)
-                                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
-                                mMap.addMarker(markerOptions).isVisible();
+        //Retrieves accroding to type
+        for(int i = 0; i<mFoodAndDrinkGoogleKeywords.size();i++)
+        {
+            generatePlacesAccordingToTagword(location, mFoodAndDrinkGoogleKeywords.get(i));
+        }
 
-                                Log.d("POIApp","Placename"+placeName+" with lat: "+lat+" and long: "+lng);
-                            }
-                        }
-                    }
+        //Retrieves accroding to type
+        for(int i = 0; i<mShoppingGoogleKeywords.size();i++)
+        {
+            generatePlacesAccordingToTagword(location, mShoppingGoogleKeywords.get(i));
+        }
 
-                    @Override
-                    public void onFailure(Call<MyPlaces> call, Throwable t) {
+        //Different URL generated for Keywords
+        for(int i = 0; i<mNonGoogleKeywords.size();i++)
+        {
+            generatePlacesAccordingToKeyword(location, mNonGoogleKeywords.get(i));
+        }
 
-                    }
-                });
     }
 
 }
