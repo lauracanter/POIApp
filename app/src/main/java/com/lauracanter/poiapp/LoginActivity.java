@@ -88,9 +88,6 @@ public class LoginActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
     }
 
-    public void signInExistingUser(View v){
-        attemptLogin();
-    }
 
     public void registerNewUser(View v)
     {
@@ -128,6 +125,11 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    //executes when user taps signIn button
+    public void signInExistingUser(View v){
+        attemptLogin();
     }
 
     public void showMessageDialog(String message)

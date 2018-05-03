@@ -88,23 +88,17 @@ public class HomePageActivity extends AppCompatActivity implements OnMapReadyCal
     private ActionBarDrawerToggle mToggle;
     private GoogleMap mMap;
 
-    //private GeoDataClient mGeoDataClient;
+
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
-    //private PlaceDetectionClient mPlaceDetectionClient;
-    //private FusedLocationProviderClient mFusedLocationProviderClient;
-    private LocationManager mLocationManager;
-    private LocationListener mLocationListener;
     private Location mLastKnownLocation;
 
     private DatabaseReference mDatabaseReference;
-    private FirebaseDatabase mFirebaseDatabase;
     private final FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
     private UserPreferences mUserPreferences;
 
     private ArrayList<String> mEntertainmentAndSitesGoogleKeywords, mFoodAndDrinkGoogleKeywords, mNonGoogleKeywords, mShoppingGoogleKeywords;
     private String currentUserId;
-    private boolean isPermissionGranted, mLocationPermissionGranted = false;
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -120,7 +114,6 @@ public class HomePageActivity extends AppCompatActivity implements OnMapReadyCal
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
         mMap.getUiSettings().setAllGesturesEnabled(false);
-
     }
 
     @SuppressLint("RestrictedApi")
@@ -135,13 +128,7 @@ public class HomePageActivity extends AppCompatActivity implements OnMapReadyCal
         drawerLayout.addDrawerListener(mToggle);
         mToggle.syncState();
         currentUserId = currentUser.getUid();
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
         mDatabaseReference = FirebaseDatabase.getInstance().getReference().child("User Preferences").child(currentUserId);
-        //mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-
-        // mPlaceDetectionClient = Places.getPlaceDetectionClient(this, null);
-        // mGeoDataClient = Places.getGeoDataClient(this, null);
-
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
@@ -173,14 +160,12 @@ public class HomePageActivity extends AppCompatActivity implements OnMapReadyCal
                 .build();
 
         mLocationRequest = new LocationRequest();
-        mLocationRequest.setSmallestDisplacement(100);
+        //mLocationRequest.setSmallestDisplacement(100);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-        mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-
     }
 
     @Override
@@ -188,7 +173,6 @@ public class HomePageActivity extends AppCompatActivity implements OnMapReadyCal
         super.onStart();
         mGoogleApiClient.connect();
     }
-
 
     @Override
     public void onResume() {
@@ -232,38 +216,17 @@ public class HomePageActivity extends AppCompatActivity implements OnMapReadyCal
         });
     }
 
-    /*private void updateLocationUI() {
-        if (mMap == null) {
-            return;
-        }
-        try {
-            if (mLocationPermissionGranted) {
-                Log.d("POIApp", "updateLocationUI PermissionGranted");
-                mMap.setMyLocationEnabled(true);
-                mMap.getUiSettings().setMyLocationButtonEnabled(true);
-            } else {
-                Log.d("POIApp", "updateLocationUI NOT PermissionGranted");
-                mMap.setMyLocationEnabled(false);
-                mMap.getUiSettings().setMyLocationButtonEnabled(false);
-                mLastKnownLocation = null;
-                getLocationPermission();
-            }
-        } catch (SecurityException e) {
-            Log.e("Exception: %s", e.getMessage());
-        }
-    }*/
-
     public boolean isServicesOk() {
         Log.d("POIApp", "isServicesOk: checking google services version");
 
         int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(HomePageActivity.this);
 
         if (available == ConnectionResult.SUCCESS) {
-            //everything is fine and user can make map requestd
+            //everything is fine and user can make map requests
             Log.d("POIApp", "isServicesOk: Google Play Service is working");
             return true;
         } else if (GoogleApiAvailability.getInstance().isUserResolvableError(available)) {
-            //an error occured but we can resolve it
+            //an error occurred but we can resolve it
             Log.d("POIApp", "isServicesOk: an error occured but we can fix it");
             Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(HomePageActivity.this, available, ERROR_DIALOG_REQUEST);
             dialog.show();
@@ -289,7 +252,7 @@ public class HomePageActivity extends AppCompatActivity implements OnMapReadyCal
             if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
                     COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 Log.d("POIApp", "getLocationPermission coaseLocationGranted");
-                mLocationPermissionGranted = true;
+
                 initMap();
             } else {
                 Log.d("POIApp", "getLocationPermission else Accessed");
@@ -310,20 +273,19 @@ public class HomePageActivity extends AppCompatActivity implements OnMapReadyCal
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         Log.d(TAG, "onRequestPermissionsResult: called.");
-        mLocationPermissionGranted = false;
 
         switch (requestCode) {
             case LOCATION_PERMISSION_REQUEST_CODE: {
                 if (grantResults.length > 0) {
                     for (int i = 0; i < grantResults.length; i++) {
                         if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
-                            mLocationPermissionGranted = false;
+
                             Log.d(TAG, "onRequestPermissionsResult: permission failed");
                             return;
                         }
                     }
                     Log.d(TAG, "onRequestPermissionsResult: permission granted");
-                    mLocationPermissionGranted = true;
+
                     //initialize our map
                     initMap();
                 }
@@ -358,10 +320,6 @@ public class HomePageActivity extends AppCompatActivity implements OnMapReadyCal
     public void onLocationChanged(Location location) {
 
         Log.i("POIApp", location.toString());
-
-        if (mLocationListener != null) {
-            mLocationListener.onLocationChanged(location);
-        }
 
         //Animate movement of user
         mMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())));
@@ -453,19 +411,19 @@ public class HomePageActivity extends AppCompatActivity implements OnMapReadyCal
 
     public void generatePlacesFromArrays(Location location)
     {
-        //Retrieves accroding to type
+        //Retrieves according to type
         for(int i = 0; i<mEntertainmentAndSitesGoogleKeywords.size();i++)
         {
             generatePlacesAccordingToTagword(location, mEntertainmentAndSitesGoogleKeywords.get(i));
         }
 
-        //Retrieves accroding to type
+        //Retrieves according to type
         for(int i = 0; i<mFoodAndDrinkGoogleKeywords.size();i++)
         {
             generatePlacesAccordingToTagword(location, mFoodAndDrinkGoogleKeywords.get(i));
         }
 
-        //Retrieves accroding to type
+        //Retrieves according to type
         for(int i = 0; i<mShoppingGoogleKeywords.size();i++)
         {
             generatePlacesAccordingToTagword(location, mShoppingGoogleKeywords.get(i));
@@ -476,8 +434,6 @@ public class HomePageActivity extends AppCompatActivity implements OnMapReadyCal
         {
             generatePlacesAccordingToKeyword(location, mNonGoogleKeywords.get(i));
         }
-
     }
-
 }
 

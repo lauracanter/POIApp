@@ -14,47 +14,7 @@ public class DataParser {
 
     private HashMap<String, String> getPlace(JSONObject googlePlaceJson)
     {
-        /*HashMap<String, String> googlePlaceMap = new HashMap<>();
-        String placeName = "--NA--";
-        String vicinity = "--NA--";
-        String latitude = "";
-        String longitude = "";
-        String reference = "";*/
-
         Log.d("POIApp DataParser", "getPlace jsonObject= "+googlePlaceJson.toString());
-
-           /* try {
-                if(!googlePlaceJson.isNull("name")) {
-                    placeName = googlePlaceJson.getString("name");
-                    Log.d("POIApp DataParser", "name"+placeName);
-                }
-
-                if(!googlePlaceJson.isNull("vicinity")){
-                    vicinity=googlePlaceJson.getString("vicinity");
-                    Log.d("POIApp DataParser", "vicinity"+vicinity);
-                }
-
-                latitude = googlePlaceJson.getJSONObject("geometry").getJSONObject("location").getString("lat");
-                longitude = googlePlaceJson.getJSONObject("geometry").getJSONObject("location").getString("lon");
-
-                reference = googlePlaceJson.getString("reference");
-
-                googlePlaceMap.put("placeName", placeName);
-                Log.d("POIApp","placeName: "+placeName);
-                googlePlaceMap.put("vicinity", vicinity);
-                Log.d("POIApp","vicinity: "+vicinity);
-                googlePlaceMap.put("lat", latitude);
-                Log.d("POIApp","lat: "+latitude);
-                googlePlaceMap.put("lon", longitude);
-                Log.d("POIApp","lon: "+longitude);
-                googlePlaceMap.put("reference", reference);
-                Log.d("POIApp","reference: "+reference);
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            return googlePlaceMap;*/
 
             HashMap<String, String> googlePlaceMap = new HashMap<String, String>();
             String placeName = "-NA-";

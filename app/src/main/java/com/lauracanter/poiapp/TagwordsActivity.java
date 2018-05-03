@@ -166,7 +166,7 @@ public class TagwordsActivity extends AppCompatActivity {
         ToggleButton toggleButton7 = findViewById(R.id.toggleButton7);
         ToggleButton toggleButton8 = findViewById(R.id.toggleButton8);
 
-        if (toggleButton1.isChecked() == true) {
+        if (toggleButton1.isChecked()) {
             if (toggleButton1.getText().toString() == "Food Court/Market") {
                 Log.d("POIApp", "togglebutton 1 is Food Court/Market");
                 mNonGoogleKeywords.add("food court");
@@ -183,7 +183,7 @@ public class TagwordsActivity extends AppCompatActivity {
             }
         }
 
-        if (toggleButton2.isChecked() == true) {
+        if (toggleButton2.isChecked()) {
             if (toggleButton2.getText().toString() == "Restaurant") {
                 Log.d("POIApp", "toggleButton 2 is Restaurant");
                 mFoodAndDrinkGoogleKeywords.add("restaurant");
@@ -200,10 +200,9 @@ public class TagwordsActivity extends AppCompatActivity {
                 mNonGoogleKeywords.add("mountain");
                 mNonGoogleKeywords.add("hiking trail");
             }
-
         }
 
-        if (toggleButton3.isChecked() == true) {
+        if (toggleButton3.isChecked()) {
             if (toggleButton3.getText().toString() == "Cafe") {
                 Log.d("POIApp", "toggleButton is Cafe");
                 mFoodAndDrinkGoogleKeywords.add("cafe");
@@ -219,7 +218,7 @@ public class TagwordsActivity extends AppCompatActivity {
             }
         }
 
-        if (toggleButton4.isChecked() == true) {
+        if (toggleButton4.isChecked()) {
             if (toggleButton4.getText().toString() == "Fine Dining") {
                 Log.d("POIApp", "toggleButton is a Fine Dining");
                 mNonGoogleKeywords.add("fine dining");
@@ -236,7 +235,7 @@ public class TagwordsActivity extends AppCompatActivity {
             }
         }
 
-        if (toggleButton5.isChecked() == true) {
+        if (toggleButton5.isChecked()) {
             if (toggleButton5.getText().toString() == "Bar") {
                 Log.d("POIApp", "toggleButton is Bar");
                 mFoodAndDrinkGoogleKeywords.add("bar");
@@ -253,7 +252,7 @@ public class TagwordsActivity extends AppCompatActivity {
             }
         }
 
-        if (toggleButton6.isChecked() == true) {
+        if (toggleButton6.isChecked()) {
             if (toggleButton6.getText().toString() == "Nightclub") {
                 Log.d("POIApp", "toggleButton is Nightclub");
                 mFoodAndDrinkGoogleKeywords.add("nightclub");
@@ -269,7 +268,7 @@ public class TagwordsActivity extends AppCompatActivity {
             }
         }
 
-        if (toggleButton7.isChecked() == true) {
+        if (toggleButton7.isChecked()) {
             if (toggleButton7.getText().toString() == "Casino") {
                 Log.d("POIApp", "toggleButton is Casino");
                 mFoodAndDrinkGoogleKeywords.add("casino");
@@ -286,7 +285,7 @@ public class TagwordsActivity extends AppCompatActivity {
             }
         }
 
-        if (toggleButton8.isChecked() == true) {
+        if (toggleButton8.isChecked()) {
             if (toggleButton8.getText().toString() == "Ice Cream") {
                 Log.d("POIApp", "toggleButton is Ice Cream");
                 mNonGoogleKeywords.add("ice cream");
@@ -303,7 +302,6 @@ public class TagwordsActivity extends AppCompatActivity {
                 mEntertainmentAndSitesGoogleKeywords.add("hindu_temple");
             }
         }
-
     }
 
 
