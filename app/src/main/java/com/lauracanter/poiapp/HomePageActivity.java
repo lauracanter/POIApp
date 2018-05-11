@@ -12,6 +12,7 @@ import android.app.LoaderManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.icu.text.LocaleDisplayNames;
@@ -29,15 +30,17 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
+//import android.widget.Toolbar;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -79,7 +82,7 @@ import java.util.ArrayList;
  * Created by Laura on 08/03/2018.
  */
 
-public class HomePageActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, LoaderManager.LoaderCallbacks<Cursor> {
+public class HomePageActivity extends AppCompatActivity implements  OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = "MainActivity", COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION, FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1, ERROR_DIALOG_REQUEST = 9001;
@@ -87,7 +90,7 @@ public class HomePageActivity extends AppCompatActivity implements OnMapReadyCal
 
     private ActionBarDrawerToggle mToggle;
     private GoogleMap mMap;
-
+    private DrawerLayout drawerLayout;
 
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
@@ -123,22 +126,32 @@ public class HomePageActivity extends AppCompatActivity implements OnMapReadyCal
         setContentView(R.layout.activity_homepage);
 
         //Set up menu
-        DrawerLayout drawerLayout = findViewById(R.id.drawer);
+        //Toolbar toolbar = findViewById(R.id.toolbar);
+
+        drawerLayout = findViewById(R.id.drawer);
         mToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
         drawerLayout.addDrawerListener(mToggle);
         mToggle.syncState();
+        getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_menu_black_24dp);
+
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .addApi(Places.GEO_DATA_API)
+                .enableAutoManage(this, this)
+                .build();
+
         currentUserId = currentUser.getUid();
         mDatabaseReference = FirebaseDatabase.getInstance().getReference().child("User Preferences").child(currentUserId);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
+            Log.d("POIApp", "No permission, onCreate stopped");
             return;
         }
-
-        if (getSupportActionBar() != null) {
-            Log.d("POIApp", "getSupportActionbar not null");
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        } else Log.d("POIApp", "getSupportActionBar is null");
 
         //set up location permissions
         getLocationPermission();
@@ -151,16 +164,8 @@ public class HomePageActivity extends AppCompatActivity implements OnMapReadyCal
             Log.d("POIApp", "onCreate: isServices ok is working");
         }
 
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .addApi(Places.GEO_DATA_API)
-                .enableAutoManage(this, this)
-                .build();
-
         mLocationRequest = new LocationRequest();
-        //mLocationRequest.setSmallestDisplacement(100);
+        mLocationRequest.setSmallestDisplacement(100);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -187,6 +192,7 @@ public class HomePageActivity extends AppCompatActivity implements OnMapReadyCal
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         if (mToggle.onOptionsItemSelected(item)) {
             return true;
         }
@@ -326,7 +332,11 @@ public class HomePageActivity extends AppCompatActivity implements OnMapReadyCal
 
         if (mLastKnownLocation == null) {
             mLastKnownLocation = location;
+            generatePlacesFromArrays(location);
+            Toast.makeText(HomePageActivity.this, "Showing nearby places", Toast.LENGTH_SHORT).show();
         }
+
+
 
         if (location.distanceTo(mLastKnownLocation) > 20) {
             mMap.clear();

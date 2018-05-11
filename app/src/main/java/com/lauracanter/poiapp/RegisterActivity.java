@@ -29,7 +29,7 @@ import android.app.AlertDialog;
 public class RegisterActivity extends AppCompatActivity {
 
     //Constants
-    static private String CHAT_PREFS = "ChatPrefes";
+    static private String CHAT_PREFS = "ChatPrefs";
     static private String DISPLAY_KEY_NAME = "username";
 
     //UI Reference Variables
